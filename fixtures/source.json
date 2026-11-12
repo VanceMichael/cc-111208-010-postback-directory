@@ -1,0 +1,41 @@
+{
+  "routes": {
+    "GET /directory": [
+      {
+        "headers": {
+          "Set-Cookie": "sid=local; Path=/"
+        },
+        "body": "<form method=\"post\" action=\"/directory\"><input type=\"hidden\" name=\"state\" value=\"one\"><input name=\"scope\" value=\"retail\"><input name=\"scope\" value=\"service\"><select name=\"city\"><option selected value=\"A\">A</option><option value=\"B\">B</option></select><input disabled name=\"ignored\" value=\"no\"><button name=\"action\" value=\"next\">下一页</button><button name=\"action\" value=\"reserve\">预约</button></form><table data-city=\"A\" data-total=\"2\" data-last=\"false\"><tr data-channel=\"C1\" data-store=\"S1\"><td>合成网点甲</td></tr></table>"
+      }
+    ],
+    "POST /directory": [
+      {
+        "expect": {
+          "headers": {
+            "Cookie": "sid=local"
+          },
+          "form": {
+            "state": [
+              "one"
+            ],
+            "scope": [
+              "retail",
+              "service"
+            ],
+            "city": [
+              "A"
+            ],
+            "action": [
+              "next"
+            ]
+          }
+        },
+        "body": "<form method=\"post\" action=\"/directory\"><input type=\"hidden\" name=\"state\" value=\"two\"><input name=\"scope\" value=\"retail\"><input name=\"scope\" value=\"service\"><select name=\"city\"><option selected value=\"A\">A</option><option value=\"B\">B</option></select><input disabled name=\"ignored\" value=\"no\"><button name=\"action\" value=\"next\">下一页</button><button name=\"action\" value=\"reserve\">预约</button></form><table data-city=\"A\" data-total=\"2\" data-last=\"true\"><tr data-channel=\"C1\" data-store=\"S2\"><td>合成网点甲</td></tr></table>"
+      },
+      {
+        "status": 409,
+        "body": "<p>expired state</p>"
+      }
+    ]
+  }
+}
